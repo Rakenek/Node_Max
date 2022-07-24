@@ -7,7 +7,14 @@ const adminData = require("./admin");
 const router = express.Router();
 router.get("/", (req, res, next) => {
   const products = adminData.products;
-  res.render("shop", { prods: products, pageTitle: "Shop", path: "/" });
+  console.log(products.length > 0);
+  res.render("shop", {
+    prods: products,
+    pageTitle: "Shop",
+    path: "/",
+    isShop: true,
+    hasProducts: products.length > 0,
+  });
 });
 
 module.exports = router;
