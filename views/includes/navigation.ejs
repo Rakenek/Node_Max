@@ -1,0 +1,19 @@
+<header class="main-header">
+  <nav class="main-header__nav">
+    <ul class="main-header__item-list">
+      <% if(path==='/'){ %>
+      <li class="main-header__item"><a class="active" href="/">Shop</a></li>
+      <% }else{ %>
+      <li class="main-header__item"><a href="/">Shop</a></li>
+      <% } %> <% if(path==='/admin/add-product'){ %>
+      <li class="main-header__item">
+        <a class="active" href="/admin/add-product">Add Product</a>
+      </li>
+      <% }else{ %>
+      <li class="main-header__item">
+        <a href="/admin/add-product">Add Product</a>
+      </li>
+      <% } %>
+    </ul>
+  </nav>
+</header>
