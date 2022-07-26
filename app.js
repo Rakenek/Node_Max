@@ -4,7 +4,7 @@ const path = require("path");
 
 const adminRoutes = require("./routes/admin");
 const shopRoutes = require("./routes/shop");
-const productController = require("./controllers/products");
+const errorController = require("./controllers/error");
 
 const app = express();
 
@@ -16,6 +16,6 @@ app.use(express.static(path.join(__dirname, "public")));
 app.use("/admin", adminRoutes);
 app.use(shopRoutes);
 
-app.use(productController.notFoundProducts);
+app.use(errorController.notFoundProducts);
 
 app.listen(3000);
