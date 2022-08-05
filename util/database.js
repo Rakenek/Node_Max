@@ -1,20 +1,31 @@
-const Sequelize = require("sequelize");
+const mongodb = require("mongodb");
+const MONGO_PASS = require("../SECRET");
 
-const sequelize = new Sequelize("mydatabase", "root", "database", {
-  dialect: "mysql",
-  host: "127.0.0.1",
-});
+const MongoClient = mongodb.MongoClient;
 
-module.exports = sequelize;
+let _db;
 
-// const mysql = require("mysql2");
+const mongoConnect = (callback) => {
+  MongoClient.connect(
+    `mongodb+srv://raken:${MONGO_PASS}@cluster0.t7o7cnp.mongodb.net/shop?retryWrites=true&w=majority`
+  )
+    .then((client) => {
+      console.log("connected to db");
+      _db = client.db();
+      callback();
+    })
+    .catch((err) => {
+      console.log(err);
+      throw err;
+    });
+};
 
-// const pool = mysql.createPool({
-//   host: "127.0.0.1",
-//   port: "3306",
-//   user: "root",
-//   password: "database",
-//   database: "mydatabase",
-// });
+const getDb = () => {
+  if (_db) {
+    return _db;
+  }
+  throw "No database found!";
+};
 
-// module.exports = pool.promise();
+exports.mongoConnect = mongoConnect;
+exports.getDb = getDb;
