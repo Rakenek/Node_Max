@@ -20,13 +20,12 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use((req, res, next) => {
   const id = "62ee6aa461bdc5a80a1531ab";
 
-  // const newUser = new User("Colt", "test@test.com", id);
+  // const newUser = new User("Colt", "test@test.com", { items: [] }, id);
   // newUser.save();
-  // User.findById(id);
 
   User.findById(id)
     .then((user) => {
-      req.user = user;
+      req.user = new User(user.name, user.email, user.cart, user._id);
       next();
     })
     .catch((err) => console.log(err));
