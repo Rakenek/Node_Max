@@ -16,6 +16,7 @@ exports.getLogin = (req, res, next) => {
     pageTitle: "Login",
     errorMessage: message,
     oldInput: { email: "", password: "" },
+    validationErrors: [],
     //isAuthenticated: false,
   });
 };
@@ -24,6 +25,7 @@ exports.postLogin = (req, res, next) => {
   const { email, password } = req.body;
 
   const errors = validationResult(req);
+
   if (!errors.isEmpty()) {
     return res.status(422).render("auth/login", {
       path: "/login",
@@ -31,6 +33,7 @@ exports.postLogin = (req, res, next) => {
       //isAuthenticated: false,
       errorMessage: errors.array()[0].msg,
       oldInput: { email: email, password: password },
+      validationErrors: errors.array(),
     });
   }
 
