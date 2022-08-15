@@ -15,6 +15,7 @@ exports.getLogin = (req, res, next) => {
     path: "/login",
     pageTitle: "Login",
     errorMessage: message,
+    oldInput: { email: "", password: "" },
     //isAuthenticated: false,
   });
 };
@@ -29,6 +30,7 @@ exports.postLogin = (req, res, next) => {
       pageTitle: "login",
       //isAuthenticated: false,
       errorMessage: errors.array()[0].msg,
+      oldInput: { email: email, password: password },
     });
   }
 
@@ -79,18 +81,31 @@ exports.getSignup = (req, res, next) => {
     pageTitle: "signup",
     //isAuthenticated: false,
     errorMessage: message,
+    oldInput: {
+      email: "",
+      password: "",
+      confirmPassword: "",
+    },
+    validationErrors: [],
   });
 };
 
 exports.postSignup = (req, res, next) => {
   const { email, password } = req.body;
   const errors = validationResult(req);
+  console.log(errors.array());
   if (!errors.isEmpty()) {
     return res.status(422).render("auth/signup", {
       path: "/signup",
       pageTitle: "signup",
       //isAuthenticated: false,
       errorMessage: errors.array()[0].msg,
+      oldInput: {
+        email: email,
+        password: password,
+        confirmPassword: req.body.confirmPassword,
+      },
+      validationErrors: errors.array(),
     });
   }
 
