@@ -19,9 +19,27 @@ exports.getAddProduct = (req, res, next) => {
 };
 
 exports.postAddProduct = (req, res, next) => {
-  const { title, imageUrl, description, price } = req.body;
+  const { title, description, price } = req.body;
+  const image = req.file;
+
+  if (!image) {
+    return res.status(422).render("admin/edit-product", {
+      pageTitle: "Add Product",
+      path: "/admin/add-product",
+      editing: false,
+      errorMessage: "Attached file is not an image",
+      oldInput: {
+        title: title,
+        //imageUrl: imageUrl,
+        description: description,
+        price: price,
+      },
+      validationErrors: [],
+    });
+  }
 
   const errors = validationResult(req);
+  const imageUrl = image.path;
 
   if (!errors.isEmpty()) {
     return res.status(422).render("admin/edit-product", {
@@ -31,7 +49,7 @@ exports.postAddProduct = (req, res, next) => {
       errorMessage: errors.array()[0].msg,
       oldInput: {
         title: title,
-        imageUrl: imageUrl,
+        //imageUrl: imageUrl,
         description: description,
         price: price,
       },
@@ -109,7 +127,8 @@ exports.postEditProduct = (req, res, next) => {
   const prodId = req.body.productId;
   const updatedTitle = req.body.title;
   const updatedPrice = req.body.price;
-  const updatedImageUrl = req.body.imageUrl;
+  //const updatedImageUrl = req.body.imageUrl;
+  const image = req.file;
   const updatedDesc = req.body.description;
 
   const errors = validationResult(req);
@@ -123,7 +142,7 @@ exports.postEditProduct = (req, res, next) => {
       product: {
         _id: prodId,
         title: updatedTitle,
-        imageUrl: updatedImageUrl,
+        //imageUrl: updatedImageUrl,
         description: updatedDesc,
         price: updatedPrice,
       },
@@ -138,7 +157,10 @@ exports.postEditProduct = (req, res, next) => {
       }
       product.title = updatedTitle;
       product.price = updatedPrice;
-      product.imageUrl = updatedImageUrl;
+      if (image) {
+        product.imageUrl = image.path;
+      }
+
       product.description = updatedDesc;
       return product.save().then((result) => {
         console.log("updated product");
